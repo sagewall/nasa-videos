@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/esri.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NASA Videos</title>
+  </head>
+  <body>
+    <calcite-shell>
+      <calcite-navigation slot="header">
+        <calcite-navigation-logo
+          slot="logo"
+          heading="Sample"
+        ></calcite-navigation-logo>
+
+        <calcite-button id="sign-in-button" slot="user">Sign in</calcite-button>
+
+        <calcite-navigation-user
+          hidden
+          slot="user"
+          full-name=""
+          username=""
+        ></calcite-navigation-user>
+      </calcite-navigation>
+      <div id="content">
+        <div id="source-div"></div>
+        <div id="map-div"></div>
+      </div>
+      <calcite-shell-panel slot="panel-end" position="end" resizable>
+        <div style="padding: 0.75rem; overflow-y: scroll">
+          <h3>NASA Videos</h3>
+          <calcite-link href="https://svs.gsfc.nasa.gov/" target="_blank"
+            >Scientific Visualization Studio
+          </calcite-link>
+          <p>wkid 4326</p>
+          <calcite-label>
+            Media Url
+            <calcite-input
+              id="video-url-input"
+              placeholder="url"
+              value="https://sagewall.github.io/test-images/MC03_stage4_GMAO_CO_2048x1024_en.mp4"
+            >
+            </calcite-input>
+          </calcite-label>
+
+          <calcite-button id="import-media-button" style="margin-bottom: 1em"
+            >Import Media</calcite-button
+          >
+
+          <div
+            id="control-points-div"
+            style="display: none; margin-bottom: 1em"
+          >
+            <div>
+              <p>Active Control Point</p>
+              <div style="display: flex">
+                <div style="flex-grow: 1">
+                  <calcite-input autofocus prefix-text="x" id="cpx-input" />
+                </div>
+                <div style="flex-grow: 1">
+                  <calcite-input autofocus prefix-text="y" id="cpy-input" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="slider-div" style="display: none; margin-bottom: 1em">
+            <calcite-label>
+              Media Transparency:
+              <calcite-slider
+                label-handles
+                label-ticks
+                snap
+                id="transparency-slider"
+              ></calcite-slider>
+            </calcite-label>
+          </div>
+
+          <div>
+            <calcite-button
+              id="control-points-local-button"
+              style="display: none; margin-bottom: 1em"
+              >Enter Advanced Mode</calcite-button
+            >
+            <calcite-button
+              id="control-points-local-hide-button"
+              style="display: none; margin-bottom: 1em"
+              >Exit Advanced Mode</calcite-button
+            >
+            <calcite-button
+              id="reset-button"
+              style="display: none; margin-bottom: 1em"
+              >Reset Georeference</calcite-button
+            >
+          </div>
+
+          <div id="save-div" style="display: none; margin-bottom: 1em">
+            <calcite-label>
+              Title
+              <calcite-input
+                id="title-input"
+                placeholder="title"
+              ></calcite-input>
+            </calcite-label>
+            <calcite-button id="save-button" style="margin-bottom: 1em"
+              >Save</calcite-button
+            >
+            <calcite-label
+              id="media-layer-save-label"
+              style="display: none; margin-bottom: 1em"
+            >
+              Saved as MediaLayer item:
+              <calcite-link
+                id="media-layer-link"
+                href="#"
+                target="_blank"
+              ></calcite-link>
+            </calcite-label>
+            <calcite-label
+              id="webmap-save-label"
+              style="display: none; margin-bottom: 1em"
+            >
+              Saved as WebMap item:
+              <calcite-link
+                id="webmap-link"
+                href="#"
+                target="_blank"
+              ></calcite-link>
+            </calcite-label>
+          </div>
+        </div>
+      </calcite-shell-panel>
+    </calcite-shell>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
