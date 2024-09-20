@@ -308,11 +308,21 @@ async function init() {
   }
 }
 
+function addBasemapGallery(target: HTMLElement) {
+  const expand = document.createElement("arcgis-expand");
+  expand.id = "basemap-gallery-expand";
+  expand.position = "top-right";
+  const basemapGallery = document.createElement("arcgis-basemap-gallery");
+  expand.appendChild(basemapGallery);
+  target.appendChild(expand);
+}
 async function load() {
   // -------------------------------------------------------------------
   // Map and view
   // -------------------------------------------------------------------
   await import("@arcgis/map-components/dist/components/arcgis-map");
+  await import("@arcgis/map-components/dist/components/arcgis-expand");
+  await import("@arcgis/map-components/dist/components/arcgis-basemap-gallery");
 
   arcgisMap = document.createElement("arcgis-map");
 
@@ -320,6 +330,7 @@ async function load() {
     basemap: "topo-vector",
   });
   arcgisMap.map = webMap;
+  addBasemapGallery(arcgisMap);
 
   sourceView = new MapView({
     container: sourceDiv,
@@ -424,7 +435,9 @@ async function load() {
   });
 
   spatialReferenceSelect.addEventListener("calciteSelectChange", (event) => {
+    const basemapGallery = document.querySelector("#basemap-gallery-expand");
     const wkid = Number(event.target.value);
+
     if (wkid !== arcgisMap.view.spatialReference.wkid) {
       switch (wkid) {
         case 4326:
@@ -441,6 +454,9 @@ async function load() {
           videoUrlInput.value =
             "https://sagewall.github.io/test-images/MC03_stage4_GMAO_CO_2048x1024_en.mp4";
 
+          if (basemapGallery) {
+            basemapGallery.remove();
+          }
           break;
 
         case 102100:
@@ -452,6 +468,9 @@ async function load() {
           videoUrlInput.value =
             "https://sagewall.github.io/test-images/North.mp4";
 
+          if (!basemapGallery) {
+            addBasemapGallery(arcgisMap);
+          }
           break;
 
         default:
