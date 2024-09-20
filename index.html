@@ -33,13 +33,21 @@
           <calcite-link href="https://svs.gsfc.nasa.gov/" target="_blank"
             >Scientific Visualization Studio
           </calcite-link>
-          <p>wkid 4326</p>
+          <calcite-label style="margin-bottom: 1em">
+            Spatial reference
+            <calcite-select id="spatial-reference-select" width="m">
+              <calcite-option value="102100"
+                >WGS 1984 Web Mercator</calcite-option
+              >
+              <calcite-option value="4326">WGS 1984 Geographic</calcite-option>
+            </calcite-select>
+          </calcite-label>
           <calcite-label>
             Media Url
             <calcite-input
               id="video-url-input"
               placeholder="url"
-              value="https://sagewall.github.io/test-images/MC03_stage4_GMAO_CO_2048x1024_en.mp4"
+              value="https://sagewall.github.io/test-images/North.mp4"
             >
             </calcite-input>
           </calcite-label>

@@ -18,6 +18,8 @@ import WebMap from "@arcgis/core/WebMap";
 import "@esri/calcite-components/dist/calcite/calcite.css";
 import { setAssetPath } from "@esri/calcite-components/dist/components";
 import "@esri/calcite-components/dist/components/calcite-button";
+import "@esri/calcite-components/dist/components/calcite-select";
+import "@esri/calcite-components/dist/components/calcite-option";
 import "@esri/calcite-components/dist/components/calcite-input";
 import "@esri/calcite-components/dist/components/calcite-input-number";
 import "@esri/calcite-components/dist/components/calcite-label";
@@ -92,6 +94,10 @@ const saveButton = document.querySelector(
 
 const sliderDiv = document.querySelector("#slider-div") as HTMLDivElement;
 
+const spatialReferenceSelect = document.querySelector(
+  "#spatial-reference-select"
+) as HTMLCalciteSelectElement;
+
 const transparencySlider = document.querySelector(
   "#transparency-slider"
 ) as HTMLCalciteSliderElement;
@@ -149,17 +155,33 @@ async function importMedia() {
     video: videoUrl,
   });
 
-  const georeference = new ExtentAndRotationGeoreference({
-    extent: new Extent({
-      spatialReference: {
-        wkid: 4326,
-      },
-      xmin: -180,
-      ymin: -90,
-      xmax: 180,
-      ymax: 90,
-    }),
-  });
+  let georeference: ExtentAndRotationGeoreference;
+
+  if (spatialReferenceSelect.value === "4326") {
+    georeference = new ExtentAndRotationGeoreference({
+      extent: new Extent({
+        spatialReference: {
+          wkid: Number(spatialReferenceSelect.value),
+        },
+        xmin: -180,
+        ymin: -90,
+        xmax: 180,
+        ymax: 90,
+      }),
+    });
+  } else {
+    georeference = new ExtentAndRotationGeoreference({
+      extent: new Extent({
+        xmin: -14694172,
+        ymin: 0,
+        xmax: -1335833,
+        ymax: 8400000,
+        spatialReference: {
+          wkid: 3857,
+        },
+      }),
+    });
+  }
 
   // @ts-expect-error undocumented
   await videoElement.load();
@@ -294,13 +316,8 @@ async function load() {
 
   arcgisMap = document.createElement("arcgis-map");
 
-  const vectorTileLayer = new VectorTileLayer({
-    url: "https://basemapsdev.arcgis.com/arcgis/rest/services/World_Basemap_GCS_v2/VectorTileServer",
-  });
   webMap = new WebMap({
-    basemap: {
-      baseLayers: [vectorTileLayer],
-    },
+    basemap: "topo-vector",
   });
   arcgisMap.map = webMap;
 
@@ -404,6 +421,43 @@ async function load() {
 
     webMapLink.href = `${esriConfig.portalUrl}/home/item.html?id=${savedWebMapPortalItem.id}`;
     webMapLink.textContent = "WebMap";
+  });
+
+  spatialReferenceSelect.addEventListener("calciteSelectChange", (event) => {
+    const wkid = Number(event.target.value);
+    if (wkid !== arcgisMap.view.spatialReference.wkid) {
+      switch (wkid) {
+        case 4326:
+          const vectorTileLayer = new VectorTileLayer({
+            url: "https://basemapsdev.arcgis.com/arcgis/rest/services/World_Basemap_GCS_v2/VectorTileServer",
+          });
+          webMap = new WebMap({
+            basemap: {
+              baseLayers: [vectorTileLayer],
+            },
+          });
+          arcgisMap.map = webMap;
+
+          videoUrlInput.value =
+            "https://sagewall.github.io/test-images/MC03_stage4_GMAO_CO_2048x1024_en.mp4";
+
+          break;
+
+        case 102100:
+          webMap = new WebMap({
+            basemap: "topo-vector",
+          });
+          arcgisMap.map = webMap;
+
+          videoUrlInput.value =
+            "https://sagewall.github.io/test-images/North.mp4";
+
+          break;
+
+        default:
+          break;
+      }
+    }
   });
 
   transparencySlider.addEventListener("calciteSliderInput", (event) => {
