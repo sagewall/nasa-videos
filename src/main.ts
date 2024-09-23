@@ -86,6 +86,10 @@ const resetButton = document.querySelector(
   "#reset-button"
 ) as HTMLCalciteButtonElement;
 
+const restartButton = document.querySelector(
+  "#restart-button"
+) as HTMLCalciteButtonElement;
+
 const saveDiv = document.querySelector("#save-div") as HTMLDivElement;
 
 const saveButton = document.querySelector(
@@ -409,6 +413,10 @@ async function load() {
     tool.reset();
     transparencySlider.value = 0;
     videoElement.opacity = 1;
+  });
+
+  restartButton.addEventListener("click", async () => {
+    window.location.reload();
   });
 
   saveButton.addEventListener("click", async () => {
