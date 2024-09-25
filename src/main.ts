@@ -42,7 +42,7 @@ import * as editingTools from "@arcgis/core/views/2d/interactive/editingTools";
 setAssetPath("https://js.arcgis.com/calcite-components/2.12.2/assets");
 
 esriConfig.portalUrl = import.meta.env.VITE_PORTAL_URL;
-// esriConfig.portalUrl = "https://jsapi.maps.arcgis.com/";
+esriConfig.request.proxyUrl = import.meta.env.VITE_PROXY_URL;
 
 // -------------------------------------------------------------------
 // References to HTML elements

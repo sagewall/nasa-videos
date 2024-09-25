@@ -10,6 +10,7 @@ env:
   VITE_APP_ID: ajBHOIkZlZjkxcQC
   VITE_BASE_NAME: /nasa-videos/
   VITE_PORTAL_URL: https://devtesting.mapsdevext.arcgis.com/
+  VITE_PROXY_URL: https://www.arcgis.com/sharing/proxy
 
 permissions:
   contents: read
