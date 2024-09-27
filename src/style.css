@@ -7,6 +7,11 @@ body,
   padding: 0;
 }
 
+calcite-button,
+calcite-label {
+  margin-bottom: 0.75rem;
+}
+
 #content {
   display: flex;
   flex-direction: row;
@@ -16,4 +21,30 @@ body,
 
 #map-div {
   flex-grow: 1;
+}
+
+#sign-in-button {
+  margin-bottom: 0;
+}
+
+#sign-in-notice {
+  margin-top: 0.75rem;
+}
+
+.flex-container {
+  display: flex;
+}
+
+.flex-item {
+  flex-grow: 1;
+}
+
+.hidden {
+  display: none;
+  margin-bottom: 0.75rem;
+}
+
+.scroll-container {
+  padding: 0.75rem;
+  overflow-y: scroll;
 }

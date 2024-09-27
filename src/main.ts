@@ -18,8 +18,6 @@ import WebMap from "@arcgis/core/WebMap";
 import "@esri/calcite-components/dist/calcite/calcite.css";
 import { setAssetPath } from "@esri/calcite-components/dist/components";
 import "@esri/calcite-components/dist/components/calcite-button";
-import "@esri/calcite-components/dist/components/calcite-select";
-import "@esri/calcite-components/dist/components/calcite-option";
 import "@esri/calcite-components/dist/components/calcite-input";
 import "@esri/calcite-components/dist/components/calcite-input-number";
 import "@esri/calcite-components/dist/components/calcite-label";
@@ -27,6 +25,8 @@ import "@esri/calcite-components/dist/components/calcite-link";
 import "@esri/calcite-components/dist/components/calcite-navigation";
 import "@esri/calcite-components/dist/components/calcite-navigation-logo";
 import "@esri/calcite-components/dist/components/calcite-navigation-user";
+import "@esri/calcite-components/dist/components/calcite-notice";
+import "@esri/calcite-components/dist/components/calcite-option";
 import "@esri/calcite-components/dist/components/calcite-select";
 import "@esri/calcite-components/dist/components/calcite-shell";
 import "@esri/calcite-components/dist/components/calcite-shell-panel";
@@ -82,6 +82,10 @@ const mediaLayerSaveLabel = document.querySelector(
   "#media-layer-save-label"
 ) as HTMLCalciteLabelElement;
 
+const navigationUser = document.querySelector(
+  "calcite-navigation-user"
+) as HTMLCalciteNavigationUserElement;
+
 const resetButton = document.querySelector(
   "#reset-button"
 ) as HTMLCalciteButtonElement;
@@ -95,6 +99,18 @@ const saveDiv = document.querySelector("#save-div") as HTMLDivElement;
 const saveButton = document.querySelector(
   "#save-button"
 ) as HTMLCalciteButtonElement;
+
+const shellPanel = document.querySelector(
+  "#shell-panel"
+) as HTMLCalciteShellPanelElement;
+
+const signInButton = document.querySelector(
+  "#sign-in-button"
+) as HTMLCalciteButtonElement;
+
+const signInNotice = document.querySelector(
+  "#sign-in-notice"
+) as HTMLCalciteNoticeElement;
 
 const sliderDiv = document.querySelector("#slider-div") as HTMLDivElement;
 
@@ -245,14 +261,6 @@ async function importMedia() {
 }
 
 async function init() {
-  const signInButton =
-    document.querySelector<HTMLCalciteButtonElement>("#sign-in-button");
-
-  const navigationUser =
-    document.querySelector<HTMLCalciteNavigationUserElement>(
-      "calcite-navigation-user"
-    );
-
   signInButton!.addEventListener("click", () => {
     signInOrOut();
   });
@@ -273,6 +281,8 @@ async function init() {
     await esriId.checkSignInStatus(info.portalUrl + "/sharing");
     navigationUser!.hidden = false;
     signInButton!.hidden = true;
+    signInNotice!.open = false;
+    shellPanel!.collapsed = false;
 
     const portal = new Portal();
     portal.authMode = "immediate";
@@ -284,6 +294,8 @@ async function init() {
     load();
   } catch (error) {
     if ((error as Error).name === "identity-manager:not-authenticated") {
+      shellPanel!.collapsed = true;
+      signInNotice!.open = true;
       signInButton!.hidden = false;
       navigationUser!.hidden = true;
       destroy();

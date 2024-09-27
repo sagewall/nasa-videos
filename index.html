@@ -23,17 +23,34 @@
           username=""
         ></calcite-navigation-user>
       </calcite-navigation>
+      <calcite-notice id="sign-in-notice" open icon="sign-in">
+        <div slot="title">
+          Please log in using the button in the top-right corner
+        </div>
+        <div slot="message">Log in with your devtesting credentials.</div>
+        <calcite-link
+          slot="link"
+          href="https://devtesting.mapsdevext.arcgis.com/home/index.html"
+          >devtesting.mapsdevext.arcgis.com</calcite-link
+        >
+      </calcite-notice>
       <div id="content">
         <div id="source-div"></div>
         <div id="map-div"></div>
       </div>
-      <calcite-shell-panel slot="panel-end" position="end" resizable>
-        <div style="padding: 0.75rem; overflow-y: scroll">
+      <calcite-shell-panel
+        id="shell-panel"
+        collapsed
+        slot="panel-end"
+        position="end"
+        resizable
+      >
+        <div class="scroll-container">
           <h3>NASA Videos</h3>
           <calcite-link href="https://svs.gsfc.nasa.gov/" target="_blank"
             >Scientific Visualization Studio
           </calcite-link>
-          <calcite-label style="margin-bottom: 1em">
+          <calcite-label>
             Spatial reference
             <calcite-select id="spatial-reference-select" width="m">
               <calcite-option value="102100"
@@ -52,28 +69,23 @@
             </calcite-input>
           </calcite-label>
 
-          <calcite-button id="import-media-button" style="margin-bottom: 1em"
-            >Import Media</calcite-button
-          >
+          <calcite-button id="import-media-button">Import Media</calcite-button>
 
-          <div
-            id="control-points-div"
-            style="display: none; margin-bottom: 1em"
-          >
+          <div id="control-points-div" class="hidden">
             <div>
               <p>Active Control Point</p>
-              <div style="display: flex">
-                <div style="flex-grow: 1">
-                  <calcite-input autofocus prefix-text="x" id="cpx-input" />
+              <div class="flex-container">
+                <div class="flex-item">
+                  <calcite-input autofocus id="cpx-input" prefix-text="x" />
                 </div>
-                <div style="flex-grow: 1">
-                  <calcite-input autofocus prefix-text="y" id="cpy-input" />
+                <div class="flex-item">
+                  <calcite-input autofocus id="cpy-input" prefix-text="y" />
                 </div>
               </div>
             </div>
           </div>
 
-          <div id="slider-div" style="display: none; margin-bottom: 1em">
+          <div id="slider-div" class="hidden">
             <calcite-label>
               Media Transparency:
               <calcite-slider
@@ -86,24 +98,18 @@
           </div>
 
           <div>
-            <calcite-button
-              id="control-points-local-button"
-              style="display: none; margin-bottom: 1em"
+            <calcite-button id="control-points-local-button" class="hidden"
               >Enter Advanced Mode</calcite-button
             >
-            <calcite-button
-              id="control-points-local-hide-button"
-              style="display: none; margin-bottom: 1em"
+            <calcite-button id="control-points-local-hide-button" class="hidden"
               >Exit Advanced Mode</calcite-button
             >
-            <calcite-button
-              id="reset-button"
-              style="display: none; margin-bottom: 1em"
+            <calcite-button id="reset-button" class="hidden"
               >Reset Georeference</calcite-button
             >
           </div>
 
-          <div id="save-div" style="display: none; margin-bottom: 1em">
+          <div id="save-div" class="hidden">
             <calcite-label>
               Title
               <calcite-input
@@ -111,13 +117,8 @@
                 placeholder="title"
               ></calcite-input>
             </calcite-label>
-            <calcite-button id="save-button" style="margin-bottom: 1em"
-              >Save</calcite-button
-            >
-            <calcite-label
-              id="media-layer-save-label"
-              style="display: none; margin-bottom: 1em"
-            >
+            <calcite-button id="save-button">Save</calcite-button>
+            <calcite-label id="media-layer-save-label" class="hidden">
               Saved as MediaLayer item:
               <calcite-link
                 id="media-layer-link"
@@ -125,10 +126,7 @@
                 target="_blank"
               ></calcite-link>
             </calcite-label>
-            <calcite-label
-              id="webmap-save-label"
-              style="display: none; margin-bottom: 1em"
-            >
+            <calcite-label id="webmap-save-label" class="hidden">
               Saved as WebMap item:
               <calcite-link
                 id="webmap-link"
@@ -137,9 +135,7 @@
               ></calcite-link>
             </calcite-label>
           </div>
-          <calcite-button id="restart-button" style="margin-bottom: 1em"
-            >Start over</calcite-button
-          >
+          <calcite-button id="restart-button">Start over</calcite-button>
         </div>
       </calcite-shell-panel>
     </calcite-shell>
