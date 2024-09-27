@@ -160,105 +160,6 @@ init();
 // Functions
 // -------------------------------------------------------------------
 
-async function importMedia() {
-  const view = arcgisMap.view;
-
-  // @ts-expect-error undocumented
-  view.tools.removeAll();
-
-  arcgisMap.map.layers.forEach((layer: Layer) => {
-    layer.type === "media" && arcgisMap.map.layers.remove(layer);
-  });
-
-  const videoUrl = videoUrlInput?.value;
-  videoElement = new VideoElement({
-    video: videoUrl,
-  });
-
-  let georeference: ExtentAndRotationGeoreference;
-
-  if (spatialReferenceSelect.value === "4326") {
-    georeference = new ExtentAndRotationGeoreference({
-      extent: new Extent({
-        spatialReference: {
-          wkid: Number(spatialReferenceSelect.value),
-        },
-        xmin: -180,
-        ymin: -90,
-        xmax: 180,
-        ymax: 90,
-      }),
-    });
-  } else {
-    georeference = new ExtentAndRotationGeoreference({
-      extent: new Extent({
-        xmin: -14694172,
-        ymin: 0,
-        xmax: -1335833,
-        ymax: 8400000,
-        spatialReference: {
-          wkid: 3857,
-        },
-      }),
-    });
-  }
-
-  await videoElement.load();
-  const controlPointsGeoreference = mediaUtils.toControlPointsGeoreference(
-    georeference,
-    videoElement.content.videoWidth,
-    videoElement.content.videoHeight
-  );
-  videoElement.georeference = controlPointsGeoreference;
-
-  mediaLayer = new MediaLayer({
-    source: videoElement,
-  });
-  arcgisMap.addLayer(mediaLayer);
-
-  await view.when();
-  await mediaLayer.load();
-  await videoElement.load();
-  await view.goTo(mediaLayer.fullExtent.expand(1.2));
-
-  const editingElement = new VideoElement({
-    video: videoElement.video,
-    georeference:
-      mediaUtils.createLocalModeControlPointsGeoreference(videoElement),
-  });
-
-  const editingMediaLayer = new MediaLayer({
-    source: [editingElement],
-    effect: "drop-shadow(0, 10px, 20px, black)",
-  });
-
-  sourceView.map.layers.add(editingMediaLayer);
-
-  // @ts-expect-error undocumented
-  sourceView.extent = editingElement.georeference.coords.extent.expand(1.2);
-  sourceView.constraints = {
-    snapToZoom: false,
-    // @ts-expect-error undocumented
-    geometry: editingElement.georeference.coords.extent,
-  };
-
-  tool = new editingTools.MediaTransformToolsWrapper({
-    mediaElement: videoElement,
-    view,
-    advancedMode: {
-      mediaElement: editingElement,
-      view: sourceView,
-    },
-  });
-
-  videoUrlInput!.disabled = true;
-
-  controlPointsLocalButton.style.display = "block";
-  resetButton.style.display = "block";
-  saveDiv.style.display = "block";
-  sliderDiv.style.display = "block";
-}
-
 async function init() {
   signInButton!.addEventListener("click", () => {
     signInOrOut();
@@ -321,14 +222,6 @@ async function init() {
   }
 }
 
-function addBasemapGallery(target: HTMLElement) {
-  const expand = document.createElement("arcgis-expand");
-  expand.id = "basemap-gallery-expand";
-  expand.position = "top-right";
-  const basemapGallery = document.createElement("arcgis-basemap-gallery");
-  expand.appendChild(basemapGallery);
-  target.appendChild(expand);
-}
 async function load() {
   // -------------------------------------------------------------------
   // Map and view
@@ -500,4 +393,112 @@ async function load() {
     const val = event.target.value as number;
     videoElement.opacity = (100 - val) / 100;
   });
+}
+
+function addBasemapGallery(target: HTMLElement) {
+  const expand = document.createElement("arcgis-expand");
+  expand.id = "basemap-gallery-expand";
+  expand.position = "top-right";
+  const basemapGallery = document.createElement("arcgis-basemap-gallery");
+  expand.appendChild(basemapGallery);
+  target.appendChild(expand);
+}
+
+async function importMedia() {
+  const view = arcgisMap.view;
+
+  // @ts-expect-error undocumented
+  view.tools.removeAll();
+
+  arcgisMap.map.layers.forEach((layer: Layer) => {
+    layer.type === "media" && arcgisMap.map.layers.remove(layer);
+  });
+
+  const videoUrl = videoUrlInput?.value;
+  videoElement = new VideoElement({
+    video: videoUrl,
+  });
+
+  let georeference: ExtentAndRotationGeoreference;
+
+  if (spatialReferenceSelect.value === "4326") {
+    georeference = new ExtentAndRotationGeoreference({
+      extent: new Extent({
+        spatialReference: {
+          wkid: Number(spatialReferenceSelect.value),
+        },
+        xmin: -180,
+        ymin: -90,
+        xmax: 180,
+        ymax: 90,
+      }),
+    });
+  } else {
+    georeference = new ExtentAndRotationGeoreference({
+      extent: new Extent({
+        xmin: -14694172,
+        ymin: 0,
+        xmax: -1335833,
+        ymax: 8400000,
+        spatialReference: {
+          wkid: 3857,
+        },
+      }),
+    });
+  }
+
+  await videoElement.load();
+  const controlPointsGeoreference = mediaUtils.toControlPointsGeoreference(
+    georeference,
+    videoElement.content.videoWidth,
+    videoElement.content.videoHeight
+  );
+  videoElement.georeference = controlPointsGeoreference;
+
+  mediaLayer = new MediaLayer({
+    source: videoElement,
+  });
+  arcgisMap.addLayer(mediaLayer);
+
+  await view.when();
+  await mediaLayer.load();
+  await videoElement.load();
+  await view.goTo(mediaLayer.fullExtent.expand(1.2));
+
+  const editingElement = new VideoElement({
+    video: videoElement.video,
+    georeference:
+      mediaUtils.createLocalModeControlPointsGeoreference(videoElement),
+  });
+
+  const editingMediaLayer = new MediaLayer({
+    source: [editingElement],
+    effect: "drop-shadow(0, 10px, 20px, black)",
+  });
+
+  sourceView.map.layers.add(editingMediaLayer);
+
+  // @ts-expect-error undocumented
+  sourceView.extent = editingElement.georeference.coords.extent.expand(1.2);
+  sourceView.constraints = {
+    snapToZoom: false,
+    // @ts-expect-error undocumented
+    geometry: editingElement.georeference.coords.extent,
+  };
+
+  tool = new editingTools.MediaTransformToolsWrapper({
+    mediaElement: videoElement,
+    view,
+    advancedMode: {
+      mediaElement: editingElement,
+      view: sourceView,
+    },
+  });
+
+  videoUrlInput!.disabled = true;
+
+  controlPointsLocalButton.style.display = "block";
+  resetButton.style.display = "block";
+  saveDiv.style.display = "block";
+  sliderDiv.style.display = "block";
 }
