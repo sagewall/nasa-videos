@@ -219,8 +219,7 @@ async function importMedia() {
   await view.when();
   await mediaLayer.load();
   await videoElement.load();
-  // @ts-expect-error undocumented
-  await view.goTo(videoElement.georeference.coords.extent.expand(1.2));
+  await view.goTo(mediaLayer.fullExtent.expand(1.2));
 
   const editingElement = new VideoElement({
     video: videoElement.video,
