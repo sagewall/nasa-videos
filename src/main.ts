@@ -187,7 +187,6 @@ async function importMedia() {
     });
   }
 
-  // @ts-expect-error undocumented
   await videoElement.load();
   const controlPointsGeoreference = mediaUtils.toControlPointsGeoreference(
     georeference,
@@ -203,7 +202,6 @@ async function importMedia() {
 
   await view.when();
   await mediaLayer.load();
-  // @ts-expect-error undocumented
   await videoElement.load();
   // @ts-expect-error undocumented
   await view.goTo(videoElement.georeference.coords.extent.expand(1.2));
