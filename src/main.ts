@@ -86,6 +86,10 @@ const navigationUser = document.querySelector(
   "calcite-navigation-user"
 ) as HTMLCalciteNavigationUserElement;
 
+const portalLink = document.querySelector(
+  "#portal-link"
+) as HTMLCalciteLinkElement;
+
 const resetButton = document.querySelector(
   "#reset-button"
 ) as HTMLCalciteButtonElement;
@@ -161,6 +165,9 @@ init();
 // -------------------------------------------------------------------
 
 async function init() {
+  portalLink.href = esriConfig.portalUrl;
+  portalLink.textContent = esriConfig.portalUrl;
+
   signInButton!.addEventListener("click", () => {
     signInOrOut();
   });
