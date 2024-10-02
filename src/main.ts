@@ -41,7 +41,7 @@ import * as mediaUtils from "@arcgis/core/layers/support/mediaUtils";
 // @ts-expect-error undocumented
 import * as editingTools from "@arcgis/core/views/2d/interactive/editingTools";
 
-setAssetPath("https://js.arcgis.com/calcite-components/2.12.2/assets");
+setAssetPath("https://js.arcgis.com/calcite-components/2.13.0/assets");
 
 esriConfig.portalUrl = import.meta.env.VITE_PORTAL_URL;
 esriConfig.request.proxyUrl = import.meta.env.VITE_PROXY_URL;
