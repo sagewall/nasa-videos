@@ -17,6 +17,8 @@ import MapView from "@arcgis/core/views/MapView";
 import WebMap from "@arcgis/core/WebMap";
 import "@esri/calcite-components/dist/calcite/calcite.css";
 import { setAssetPath } from "@esri/calcite-components/dist/components";
+import "@esri/calcite-components/dist/components/calcite-action";
+import "@esri/calcite-components/dist/components/calcite-action-bar";
 import "@esri/calcite-components/dist/components/calcite-button";
 import "@esri/calcite-components/dist/components/calcite-input";
 import "@esri/calcite-components/dist/components/calcite-input-number";
@@ -86,6 +88,14 @@ const navigationUser = document.querySelector(
   "calcite-navigation-user"
 ) as HTMLCalciteNavigationUserElement;
 
+const pauseAction = document.querySelector(
+  "#pause-action"
+) as HTMLCalciteActionElement;
+
+const playAction = document.querySelector(
+  "#play-action"
+) as HTMLCalciteActionElement;
+
 const portalLink = document.querySelector(
   "#portal-link"
 ) as HTMLCalciteLinkElement;
@@ -136,6 +146,10 @@ const videoUrlInput = document.querySelector(
   "#video-url-input"
 ) as HTMLCalciteInputElement;
 
+const videoActionBarDiv = document.querySelector(
+  "#video-action-bar-div"
+) as HTMLDivElement;
+
 const webMapLink = document.querySelector(
   "#webmap-link"
 ) as HTMLCalciteLinkElement;
@@ -149,6 +163,7 @@ const webMapSaveLabel = document.querySelector(
 // -------------------------------------------------------------------
 
 let arcgisMap: HTMLArcgisMapElement;
+let editingVideoElement: VideoElement;
 let mediaLayer: MediaLayer;
 let sourceView: MapView;
 let tool: editingTools.MediaTransformToolsWrapper;
@@ -324,6 +339,31 @@ async function load() {
     videoElement.opacity = 1;
   });
 
+  pauseAction.addEventListener("click", async () => {
+    await editingVideoElement.load();
+    await videoElement.load();
+
+    if (!videoElement.content.paused) {
+      editingVideoElement.content.pause();
+      videoElement.content.pause();
+
+      playAction.disabled = false;
+      pauseAction.disabled = true;
+    }
+  });
+
+  playAction.addEventListener("click", async () => {
+    await editingVideoElement.load();
+    await videoElement.load();
+
+    if (videoElement.content.paused) {
+      videoElement.content.play();
+      editingVideoElement.content.play();
+      playAction.disabled = true;
+      pauseAction.disabled = false;
+    }
+  });
+
   restartButton.addEventListener("click", async () => {
     window.location.reload();
   });
@@ -472,32 +512,33 @@ async function importMedia() {
   await videoElement.load();
   await view.goTo(mediaLayer.fullExtent.expand(1.2));
 
-  const editingElement = new VideoElement({
+  editingVideoElement = new VideoElement({
     video: videoElement.video,
     georeference:
       mediaUtils.createLocalModeControlPointsGeoreference(videoElement),
   });
 
   const editingMediaLayer = new MediaLayer({
-    source: [editingElement],
+    source: [editingVideoElement],
     effect: "drop-shadow(0, 10px, 20px, black)",
   });
 
   sourceView.map.layers.add(editingMediaLayer);
 
-  // @ts-expect-error undocumented
-  sourceView.extent = editingElement.georeference.coords.extent.expand(1.2);
+  sourceView.extent =
+    // @ts-expect-error undocumented
+    editingVideoElement.georeference.coords.extent.expand(1.2);
   sourceView.constraints = {
     snapToZoom: false,
     // @ts-expect-error undocumented
-    geometry: editingElement.georeference.coords.extent,
+    geometry: editingVideoElement.georeference.coords.extent,
   };
 
   tool = new editingTools.MediaTransformToolsWrapper({
     mediaElement: videoElement,
     view,
     advancedMode: {
-      mediaElement: editingElement,
+      mediaElement: editingVideoElement,
       view: sourceView,
     },
   });
@@ -508,4 +549,5 @@ async function importMedia() {
   resetButton.style.display = "block";
   saveDiv.style.display = "block";
   sliderDiv.style.display = "block";
+  videoActionBarDiv.style.display = "block";
 }

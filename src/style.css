@@ -7,6 +7,7 @@ body,
   padding: 0;
 }
 
+calcite-action-bar,
 calcite-button,
 calcite-label {
   margin-bottom: 0.75rem;
