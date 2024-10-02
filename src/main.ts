@@ -347,6 +347,9 @@ async function load() {
       editingVideoElement.content.pause();
       videoElement.content.pause();
 
+      editingVideoElement.content.currentTime =
+        videoElement.content.currentTime;
+
       playAction.disabled = false;
       pauseAction.disabled = true;
     }
@@ -357,8 +360,12 @@ async function load() {
     await videoElement.load();
 
     if (videoElement.content.paused) {
-      videoElement.content.play();
+      editingVideoElement.content.currentTime =
+        videoElement.content.currentTime;
+
       editingVideoElement.content.play();
+      videoElement.content.play();
+
       playAction.disabled = true;
       pauseAction.disabled = false;
     }
