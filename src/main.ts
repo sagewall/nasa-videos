@@ -416,7 +416,7 @@ async function load() {
           arcgisMap.map = webMap;
 
           videoUrlInput.value =
-            "https://sagewall.github.io/test-images/MC03_stage4_GMAO_CO_2048x1024_en.mp4";
+            "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/MC03_stage4_GMAO_CO_2048x1024_en.mp4";
 
           if (basemapGallery) {
             basemapGallery.remove();
